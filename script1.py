@@ -4,5 +4,8 @@ print('Hello world!')
 print('Today is:', date.today().strftime('%d-%m-%Y'))
 
 banach_birth = date(1892, 3, 30)
-print('It is', (date.today() - banach_birth).days,
-      "days from Banach's birth.")
+banach_days = (date.today() - banach_birth).days
+print('It is', banach_days, "days from Banach's birth.")
+
+print(f"It is {banach_days * 24 * 60 * 60:,}"
+      f" seconds from Banach's birth.")
