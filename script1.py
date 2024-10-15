@@ -1,3 +1,5 @@
+"""Script calculates days and seconds from Stefan Banach's birth."""
+
 from datetime import date
 
 print('Hello world!')
