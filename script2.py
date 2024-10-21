@@ -1,3 +1,5 @@
+"""Check if a given number is odd"""
+
 try:
     number = int(input('Enter a natural number: '))
 except ValueError:
