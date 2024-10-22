@@ -1,0 +1,3 @@
+[submodule "grupa1_sub"]
+	path = grupa1_sub
+	url = git@github.com:jprzew/grupa1_sub.git
