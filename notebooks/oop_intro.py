@@ -15,6 +15,7 @@
 
 # %%
 import random
+import matplotlib.pyplot as plt
 
 
 # %%
@@ -22,6 +23,7 @@ class Population:
 
     def __init__(self, n=100):
         self.speciemens = {Creature() for _ in range(n)}
+        self.history = []
 
     @property
     def speciemens(self):
@@ -33,18 +35,30 @@ class Population:
         self.n = len(creatures)
 
     def natural_selection(self):
+        newborns = {creature.reproduce() for creature in self.speciemens} - {None}
         {creature.kill() for creature in self.speciemens}
-        # We discard dead creatures
+        self.history.append(self.n)
+        # We update the population
         self.speciemens = {creature for creature in self.speciemens
-                           if creature.alive}
+                           if creature.alive} | newborns
+
+    def plot_history(self):
+        plt.plot(self.history)
+
+    def plot_histogram(self, attr):  # attr-str, np. attr='p_death'
+        plt.hist(list(map(lambda x: getattr(x, attr), self.speciemens)))
 
     
 
 
 class Creature:
-    alive = True
-    p_death = 0.2
-    p_reproduce = 0.2
+
+    sigma = 0.01
+
+    def __init__(self, p_death=0.2, p_reproduce=0.2):
+        self.p_death = p_death
+        self.p_reproduce = p_reproduce
+        self.alive = True
 
     def kill(self):
         if random.random() < self.p_death:
@@ -52,7 +66,8 @@ class Creature:
 
     def reproduce(self):
         if (random.random() < self.p_reproduce) and self.alive:
-            return Creature()
+            return Creature(p_death=self.p_death + random.normalvariate(sigma=Creature.sigma),
+                            p_reproduce=self.p_reproduce + random.normalvariate(sigma=Creature.sigma))
 
 
 
@@ -63,54 +78,28 @@ population = Population()
 population.n
 
 # %%
-for _ in range(20):
+population.plot_histogram('p_death')
+
+# %%
+population.plot_histogram('p_reproduce')
+
+# %%
+for _ in range(50):
     population.natural_selection()
-    print(population.n)
 
 # %%
+population.n
 
 # %%
+population.plot_history()
 
 # %%
+population.plot_histogram('p_death')
 
 # %%
-population1.speciemens = [Creature()]
+population.plot_histogram('p_reproduce')
 
 # %%
-population1.n
-
-# %%
-population2 = Population(n=1000)
-
-# %%
-population2.n
-
-# %%
-{3, 4, 4, 5, 9, 11111111, 11111111}
-
-# %%
-{3, 4, 5} | {3, 7}
-
-# %%
-{3, 4, 5} - {3, 7}
-
-# %%
-{3, 4, 5} & {3, 7}
-
-# %%
-my_set = {3, 4, 5, 7}
-
-# %%
-for element in my_set:
-    print(element)
-
-# %%
-my_list = {3, 4}
-
-# %%
-my_list.add(7)
-
-# %%
-my_list
+# getattr?
 
 # %%
