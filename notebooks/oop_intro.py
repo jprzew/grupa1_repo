@@ -20,40 +20,73 @@ import matplotlib.pyplot as plt
 
 # %%
 class Population:
+    """Population simulation
+
+    Attributes
+    -----------
+    specimens: set - set of instances of Creature class
+    history: list - list of the previous population counts
+    n: int - current population count
+    
+    """
 
     def __init__(self, n=100):
-        self.speciemens = {Creature() for _ in range(n)}
+        self.specimens = {Creature() for _ in range(n)}
         self.history = []
 
     @property
-    def speciemens(self):
-        return self._speciemens
+    def specimens(self):
+        return self._specimens
 
-    @speciemens.setter
-    def speciemens(self, creatures):
-        self._speciemens = creatures
+    @specimens.setter
+    def specimens(self, creatures):
+        self._specimens = creatures
         self.n = len(creatures)
 
     def natural_selection(self):
-        newborns = {creature.reproduce() for creature in self.speciemens} - {None}
-        {creature.kill() for creature in self.speciemens}
+        """Starts natural selection process for the population. 
+           First makes creatures to reproduce, then tries to kill mature creatures
+        """
+        newborns = {creature.reproduce() for creature in self.specimens} - {None}
+        {creature.kill() for creature in self.specimens}
         self.history.append(self.n)
         # We update the population
-        self.speciemens = {creature for creature in self.speciemens
-                           if creature.alive} | newborns
+        self.specimens = {creature for creature in self.specimens
+                          if creature.alive} | newborns
 
     def plot_history(self):
         plt.plot(self.history)
 
-    def plot_histogram(self, attr):  # attr-str, np. attr='p_death'
-        plt.hist(list(map(lambda x: getattr(x, attr), self.speciemens)))
+    def plot_histogram(self, attr):
+        plt.hist(list(map(lambda x: getattr(x, attr), self.specimens)))
 
-    
+
+class Probability:
+    """Descriptor of probability. Makes sure that probability values are in [0, 1]"""
+
+    def __set_name__(self, owner, name):
+        self.private_name = '_' + name
+
+    def __get__(self, obj, objtype=None):
+        return getattr(obj, self.private_name)
+
+    def __set__(self, obj, value):
+        setattr(obj, self.private_name, min(max(0, value), 1))
 
 
 class Creature:
+    """Represents a single creature.
+
+    Attributes
+    ----------
+    p_death: float - probability of death
+    p_reproduce: float - probability of reproduction
+    sigma: float - standard deviation of the error term in creature reproduction model
+    """
 
     sigma = 0.01
+    p_death = Probability()
+    p_reproduce = Probability()
 
     def __init__(self, p_death=0.2, p_reproduce=0.2):
         self.p_death = p_death
@@ -65,6 +98,7 @@ class Creature:
             self.alive = False
 
     def reproduce(self):
+        """Creates a new creature with probability p_reproduce"""
         if (random.random() < self.p_reproduce) and self.alive:
             return Creature(p_death=self.p_death + random.normalvariate(sigma=Creature.sigma),
                             p_reproduce=self.p_reproduce + random.normalvariate(sigma=Creature.sigma))
@@ -78,13 +112,7 @@ population = Population()
 population.n
 
 # %%
-population.plot_histogram('p_death')
-
-# %%
-population.plot_histogram('p_reproduce')
-
-# %%
-for _ in range(50):
+for _ in range(130):
     population.natural_selection()
 
 # %%
@@ -98,8 +126,5 @@ population.plot_histogram('p_death')
 
 # %%
 population.plot_histogram('p_reproduce')
-
-# %%
-# getattr?
 
 # %%
