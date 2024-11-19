@@ -15,50 +15,12 @@
 
 # %%
 import random
-
+import matplotlib.pyplot as plt
+from collections import namedtuple
+from functools import reduce
 
 # %%
-class Population:
-    """Population simulation
-
-    Attributes
-    -----------
-    specimens: set - set of instances of Creature class
-    history: list - list of the previous population counts
-    n: int - current population count
-    
-    """
-
-    def __init__(self, n=100):
-        self.specimens = {Creature() for _ in range(n)}
-        self.history = []
-
-    @property
-    def specimens(self):
-        return self._specimens
-
-    @specimens.setter
-    def specimens(self, creatures):
-        self._specimens = creatures
-        self.n = len(creatures)
-
-    def natural_selection(self):
-        """Starts natural selection process for the population. 
-           First makes creatures to reproduce, then tries to kill mature creatures
-        """
-        newborns = {creature.reproduce() for creature in self.specimens} - {None}
-        {creature.kill() for creature in self.specimens}
-        self.history.append(self.n)
-        # We update the population
-        self.specimens = {creature for creature in self.specimens
-                          if creature.alive} | newborns
-
-    def plot_history(self):
-        plt.plot(self.history)
-
-    def plot_histogram(self, attr):
-        plt.hist(list(map(lambda x: getattr(x, attr), self.specimens)))
-
+PopulationData = namedtuple('PopulationData', ['creature_type', 'count'])
 
 class Probability:
     """Descriptor of probability. Makes sure that probability values are in [0, 1]"""
@@ -132,22 +94,122 @@ class Prey(Creature):
         
 
 
-# %%
-predator = Predator()
+class Population:
+    """Population simulation
+
+    Attributes
+    -----------
+    specimens: set - set of instances of Creature class
+    history: list - list of the previous population counts
+    n: int - current population count
+    
+    """
+    # def __init__(self, population_data=[PopulationData(Prey, 300),
+    #                                     PopulationData(Predator, 100)]):
+    
+    def __init__(self, population_data={Prey: 300, Predator: 100}):
+        self.species = population_data.keys()
+        specimens = [{species() for _ in range(population_data[species])}
+                     for species in self.species]
+        self.specimens = reduce(lambda x, y: x | y, specimens)
+
+        self.history = []
+
+    def _count_specimens(self):
+
+        result = \
+          {species: len({creature for creature in self.specimens
+                         if isinstance(creature, species)})
+           for species in self.species}
+        
+        return result
+   
+    @property
+    def specimens(self):
+        return self._specimens
+
+    @specimens.setter
+    def specimens(self, creatures):
+        self._specimens = creatures
+        self.n = self._count_specimens()
+
+    def hunting(self):
+        predators = [creature for creature in self.specimens if isinstance(creature, Predator)]
+        preys = [creature for creature in self.specimens if isinstance(creature, Prey)]
+
+        intersection = min(len(predators), len(preys))
+        for prey, predator in zip(preys[:intersection],
+                                  predators[:intersection]):
+            predator.hunt(prey)
+
+    def natural_selection(self):
+        """Starts natural selection process for the population. 
+           First makes creatures to reproduce, then tries to kill mature creatures
+        """
+        newborns = {creature.reproduce() for creature in self.specimens} - {None}
+        self.hunting()   
+        {creature.kill() for creature in self.specimens}
+        self.history.append(self.n)
+        # We update the population
+        self.specimens = {creature for creature in self.specimens
+                          if creature.alive} | newborns
+
+    def plot_history(self):
+        plt.legend()
+        plt.plot([list(element.values()) for element in self.history])
+
+    def plot_histogram(self, attr):
+        plt.hist(list(map(lambda x: getattr(x, attr), self.specimens)))
+
+
 
 # %%
-predator.hungry
+population = Population(population_data={Prey: 300, Predator: 300})
 
 # %%
-prey = Prey()
+population.natural_selection()
 
 # %%
-predator.hunt(prey)
-predator.hungry, prey.alive
+population.n
+
+# %%
+for _ in range(100):
+    population.natural_selection()
+
+# %%
+population.plot_history()
+
+# %%
+population.n
 
 # %%
 from collections import namedtuple
 
 # %%
+# namedtuple?
+
+# %%
+patient1 = ('Jan', 'Kowalski')
+
+# %%
+Patient = namedtuple('Patient', ['name', 'surname'])
+
+# %%
+patient1 = Patient(name='Jan', surname='Kowalski')
+
+# %%
+patient1.name
+
+# %%
+population_data = {Prey: 300, Predator: 100}
+
+# %%
+list(population_data.values())
+
+# %%
+# reduce?
+
+# %%
+plt.plot([[2, 3], [1, 3], [1, 1]])
 
 # %%
