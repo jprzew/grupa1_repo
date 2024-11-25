@@ -22,6 +22,7 @@ from functools import reduce
 # %%
 PopulationData = namedtuple('PopulationData', ['creature_type', 'count'])
 
+
 class Probability:
     """Descriptor of probability. Makes sure that probability values are in [0, 1]"""
 
@@ -65,20 +66,30 @@ class Creature:
 
 
 class Predator(Creature):
+    """Represents a predator creature.
+
+    Attributes
+    ----------
+    p_death_hungry: float - probability of death when hungry
+    hungry: bool - whether the predator is hungry
+    """
 
     p_death_hungry = 0.9
+    name = 'Predator'
 
     def __init__(self, p_death=0.2, p_reproduce=0.2):
         super().__init__(p_death, p_reproduce)
         self.hungry = True
-        
-    
+
     def hunt(self, prey):
         if (random.random() < prey.p_hunt) and self.alive:
             prey.alive = False
             self.hungry = False
 
     def kill(self):
+        """Kills the predator with probability p_death_hungry if it is hungry,
+           otherwise with probability p_death
+        """
         p_death = self.p_death_hungry if self.hungry else self.p_death
         
         if random.random() < p_death:
@@ -86,13 +97,19 @@ class Predator(Creature):
         
 
 class Prey(Creature):
-    p_hunt = Probability()
+    """Represents a prey creature.
 
-    def __init__(self, p_death=0.2, p_reproduce=0.2, p_hunt=0.2):
+    Attributes
+    ----------
+    p_hunt: float - probability of being hunted by a predator"""
+
+    p_hunt = Probability()
+    name = 'Prey'
+
+    def __init__(self, p_death=0.2, p_reproduce=0.2, p_hunt=1):
         super().__init__(p_death, p_reproduce)
         self.p_hunt = p_hunt
         
-
 
 class Population:
     """Population simulation
@@ -104,8 +121,6 @@ class Population:
     n: int - current population count
     
     """
-    # def __init__(self, population_data=[PopulationData(Prey, 300),
-    #                                     PopulationData(Predator, 100)]):
     
     def __init__(self, population_data={Prey: 300, Predator: 100}):
         self.species = population_data.keys()
@@ -155,8 +170,8 @@ class Population:
                           if creature.alive} | newborns
 
     def plot_history(self):
-        plt.legend()
         plt.plot([list(element.values()) for element in self.history])
+        plt.legend([species.name for species in self.species])
 
     def plot_histogram(self, attr):
         plt.hist(list(map(lambda x: getattr(x, attr), self.specimens)))
@@ -164,7 +179,7 @@ class Population:
 
 
 # %%
-population = Population(population_data={Prey: 300, Predator: 300})
+population = Population(population_data={Prey: 30, Predator: 30})
 
 # %%
 population.natural_selection()
@@ -183,33 +198,9 @@ population.plot_history()
 population.n
 
 # %%
-from collections import namedtuple
 
 # %%
-# namedtuple?
 
 # %%
-patient1 = ('Jan', 'Kowalski')
-
-# %%
-Patient = namedtuple('Patient', ['name', 'surname'])
-
-# %%
-patient1 = Patient(name='Jan', surname='Kowalski')
-
-# %%
-patient1.name
-
-# %%
-population_data = {Prey: 300, Predator: 100}
-
-# %%
-list(population_data.values())
-
-# %%
-# reduce?
-
-# %%
-plt.plot([[2, 3], [1, 3], [1, 1]])
 
 # %%
