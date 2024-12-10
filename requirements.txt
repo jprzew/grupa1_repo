@@ -3,3 +3,4 @@ jupyter==1.1.1
 jupytext==1.16.4
 matplotlib==3.9.2
 scikit-learn==1.5.2
+dvc==3.58.0
