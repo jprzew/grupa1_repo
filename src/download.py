@@ -2,25 +2,21 @@ from sklearn import datasets
 import pandas as pd
 from pathlib import Path
 from utils import get_repo_path
+from config import DATA_PATH, FILE, COLUMN_NAMES, TARGET
 
 
-COLUMN_NAMES = ['sepal_length',
-                'sepal_width',
-                'petal_length',
-                'petal_width']
-TARGET = 'species'
+def main():
+    iris = datasets.load_iris()
+    df = pd.DataFrame(iris['data'])
+    df.columns = COLUMN_NAMES
 
-FILE = 'iris.csv'
-DATA_PATH = 'data'
+    df[TARGET] = iris['target']
 
-iris = datasets.load_iris()
-df = pd.DataFrame(iris['data'])
-df.columns = COLUMN_NAMES
+    df[TARGET] = df[TARGET].replace(
+        {index: name for index, name in enumerate(iris['target_names'])})
 
-df[TARGET] = iris['target']
+    df.to_csv(get_repo_path() / Path(DATA_PATH) / FILE, index=False)
 
-df[TARGET] = df[TARGET].replace(
-    {index: name for index, name in enumerate(iris['target_names'])})
 
-df.to_csv(get_repo_path() / Path(DATA_PATH) / FILE, index=False)
-
+if __name__ == '__main__':
+    main()
