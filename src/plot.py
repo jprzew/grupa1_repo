@@ -1,17 +1,15 @@
+"""Runs the stage preparing plots"""
+
 import matplotlib.pyplot as plt
 import pandas as pd
 from pathlib import Path
 from utils import get_repo_path
-from config import DATA_PATH, FILE
+from config import DATA_PATH, PLOTS_PATH, INPUT_FILE, SPECIES_COLOR
 
 PLOT_SEPAL = ['sepal_length', 'sepal_width']
 PLOT_PETAL = ['petal_length', 'petal_width']
 
-SPECIES_COLOR = {'setosa': 'red',
-                 'versicolor': 'blue',
-                 'virginica': 'green'}
-
-df = pd.read_csv(get_repo_path() / Path(DATA_PATH) / FILE)
+OUTPUT_FILES = ['sepal.png', 'petal.png']
 
 
 def prepare_plot(x_data: pd.Series, y_data: pd.Series, species: pd.Series,
@@ -42,18 +40,23 @@ def prepare_plot(x_data: pd.Series, y_data: pd.Series, species: pd.Series,
     return fig
 
 
-fig_sepal = prepare_plot(x_data=df[PLOT_SEPAL[0]], y_data=df[PLOT_SEPAL[1]],
-                         species=df['species'],
-                         title='Sepal length vs Sepal width',
-                         x_axis='Sepal length', y_axis='Sepal width')
+def main():
+    df = pd.read_csv(get_repo_path() / Path(DATA_PATH) / INPUT_FILE)
 
-fig_petal = prepare_plot(x_data=df[PLOT_PETAL[0]], y_data=df[PLOT_PETAL[1]],
-                         species=df['species'],
-                         title='Petal length vs Petal width',
-                         x_axis='Petal length', y_axis='Petal width')
+    fig_sepal = prepare_plot(x_data=df[PLOT_SEPAL[0]], y_data=df[PLOT_SEPAL[1]],
+                             species=df['species'],
+                             title='Sepal length vs Sepal width',
+                             x_axis='Sepal length', y_axis='Sepal width')
+
+    fig_petal = prepare_plot(x_data=df[PLOT_PETAL[0]], y_data=df[PLOT_PETAL[1]],
+                             species=df['species'],
+                             title='Petal length vs Petal width',
+                             x_axis='Petal length', y_axis='Petal width')
+
+    fig_sepal.savefig(get_repo_path() / Path(PLOTS_PATH) / Path(OUTPUT_FILES[0]))
+    fig_petal.savefig(get_repo_path() / Path(PLOTS_PATH) / Path(OUTPUT_FILES[1]))
 
 
-fig_sepal.savefig(get_repo_path() / Path('plots/sepal.png'))
-fig_petal.savefig(get_repo_path() / Path('plots/petal.png'))
-
+if __name__ == '__main__':
+    main()
 
