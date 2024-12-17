@@ -1,0 +1,8 @@
+stages:
+  download:
+    cmd: python src/download.py
+    deps:
+    - src/config.py
+    - src/download.py
+    outs:
+    - data/iris.csv
