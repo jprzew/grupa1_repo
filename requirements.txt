@@ -1,6 +1,8 @@
 pandas==2.2.3
+asyncssh==2.18.0
 jupyter==1.1.1
 jupytext==1.16.4
 matplotlib==3.9.2
 scikit-learn==1.5.2
 dvc==3.58.0
+dvc-ssh==4.1.1
