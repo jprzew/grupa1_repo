@@ -1,0 +1,6 @@
+[core]
+    remote = remote_storage
+['remote "remote_storage"']
+    url = ssh://153.19.8.113:/home/jp/storages/A015_28.pub
+    user = jp
+    port = 22
