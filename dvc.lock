@@ -16,3 +16,27 @@ stages:
       hash: md5
       md5: 500a0acbd112b7c512929eac892f9864
       size: 4009
+  plots:
+    cmd: python src/plot.py
+    deps:
+    - path: data/iris.csv
+      hash: md5
+      md5: 500a0acbd112b7c512929eac892f9864
+      size: 4009
+    - path: src/config.py
+      hash: md5
+      md5: 3d8e4b0712e87fdb3e41f96f45a15f7f
+      size: 367
+    - path: src/plot.py
+      hash: md5
+      md5: 622c5035815c6c3f2eb84c3fbf491a92
+      size: 1962
+    outs:
+    - path: plots/petal.png
+      hash: md5
+      md5: 1f572f7304e454f0c9b7844d76c81c1b
+      size: 27366
+    - path: plots/sepal.png
+      hash: md5
+      md5: 1056d5df030a4384952c01c96a2002f7
+      size: 30788

@@ -6,3 +6,16 @@ stages:
     - src/download.py
     outs:
     - data/iris.csv
+  plots:
+    cmd: python src/plot.py
+    deps:
+    - src/config.py
+    - src/plot.py
+    - data/iris.csv
+    outs:
+    - plots/sepal.png
+    - plots/petal.png
+plots:
+  - plots/sepal.png
+  - plots/petal.png
+
