@@ -15,6 +15,17 @@ stages:
     outs:
     - plots/sepal.png
     - plots/petal.png
+  evaluate:
+    cmd: python src/fit_model.py
+    params:
+    - evaluate
+    deps:
+    - src/config.py
+    - src/fit_model.py
+    - src/utils.py
+    - data/iris.csv
+    outs:
+    - eval/metrics.json
 plots:
   - plots/sepal.png
   - plots/petal.png

@@ -6,6 +6,7 @@ import random
 random.seed(RANDOM_SEED)
 
 import json
+import dvc.api
 import pandas as pd
 import config as cfg
 from utils import get_repo_path
@@ -15,7 +16,6 @@ from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
 
-MODEL = 'knn-3'
 METRICS_FILE = 'eval/metrics.json'
 
 models = {
@@ -49,10 +49,15 @@ def evaluate_model(model, X, y):
 
 
 def main():
+
+    # Read parameters
+    params = dvc.api.params_show()
+    model_name = params['evaluate'][0]['model']
+
     df = read_data()
     X, y = prepare_data(df)
 
-    avg_accuracy = np.mean(evaluate_model(models[MODEL], X, y))
+    avg_accuracy = np.mean(evaluate_model(models[model_name], X, y))
     with open(get_repo_path() / METRICS_FILE, 'w') as f:
         json.dump({'avg_accuracy': avg_accuracy}, f)
 

@@ -1,0 +1,2 @@
+evaluate:
+  - model: 'knn-3'

@@ -40,3 +40,31 @@ stages:
       hash: md5
       md5: 1056d5df030a4384952c01c96a2002f7
       size: 30788
+  evaluate:
+    cmd: python src/fit_model.py
+    deps:
+    - path: data/iris.csv
+      hash: md5
+      md5: 013d0da08d6506664ce640459139176b
+      size: 3858
+    - path: src/config.py
+      hash: md5
+      md5: 7bd5161cb1bc0018a8d6119113d88279
+      size: 349
+    - path: src/fit_model.py
+      hash: md5
+      md5: 2af17e58c0b2ee9e39ba675a23abd360
+      size: 1505
+    - path: src/utils.py
+      hash: md5
+      md5: 5e61ddaf040c7b44eba34d2683712e6e
+      size: 381
+    params:
+      params.yaml:
+        evaluate:
+        - model: knn-3
+    outs:
+    - path: eval/metrics.json
+      hash: md5
+      md5: a7b3dbf53b1cb25c62ebf838553cb2a4
+      size: 36
