@@ -1,2 +1,2 @@
 evaluate:
-  - model: 'rf'
+  - model: 'knn-3'
