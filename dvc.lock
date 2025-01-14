@@ -53,16 +53,15 @@ stages:
       size: 349
     - path: src/fit_model.py
       hash: md5
-      md5: 2af17e58c0b2ee9e39ba675a23abd360
-      size: 1505
+      md5: ca15900e7707409ccd91c9c73e73d305
+      size: 1502
     - path: src/utils.py
       hash: md5
       md5: 5e61ddaf040c7b44eba34d2683712e6e
       size: 381
     params:
       params.yaml:
-        evaluate:
-        - model: svm
+        evaluate.model: svm
     outs:
     - path: eval/metrics.json
       hash: md5

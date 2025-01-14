@@ -52,7 +52,7 @@ def main():
 
     # Read parameters
     params = dvc.api.params_show()
-    model_name = params['evaluate'][0]['model']
+    model_name = params['evaluate']['model']
 
     df = read_data()
     X, y = prepare_data(df)
