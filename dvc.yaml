@@ -18,7 +18,7 @@ stages:
   evaluate:
     cmd: python src/fit_model.py
     params:
-    - evaluate
+    - evaluate.model
     deps:
     - src/config.py
     - src/fit_model.py

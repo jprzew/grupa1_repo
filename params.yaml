@@ -1,2 +1,2 @@
 evaluate:
-  - model: 'svm'
+  - model: svm
