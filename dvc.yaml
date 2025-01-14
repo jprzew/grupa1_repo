@@ -24,7 +24,7 @@ stages:
     - src/fit_model.py
     - src/utils.py
     - data/iris.csv
-    outs:
+    metrics:
     - eval/metrics.json
 plots:
   - plots/sepal.png
