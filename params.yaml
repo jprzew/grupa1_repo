@@ -1,2 +1,2 @@
 evaluate:
-  - model: 'knn-3'
+  - model: 'svm'
